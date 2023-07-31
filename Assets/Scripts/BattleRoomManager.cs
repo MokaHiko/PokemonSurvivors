@@ -63,12 +63,14 @@ public class BattleRoomManager : MonoBehaviour
 				{
 					Rect rect = new Rect(0, 0, texture.width, texture.height);
 					Trainer_1.Pokemons[0].Sprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+
+                    OnFinishedLoad();
 				}));
 
-				Trainer_1.Pokemons[ctr++] = newPokemon;
-				OnFinishedLoad();
+                Trainer_1.Pokemons[ctr++] = newPokemon;
             }));
 		});
+
 		// Todo: Do the same for trainer 2 
 		await Task.Yield();
 	}

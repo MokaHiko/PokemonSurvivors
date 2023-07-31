@@ -10,7 +10,7 @@ public class BattleRoomNetworkManager : MonoBehaviour
 {
 	public static BattleRoomNetworkManager Instance = null;
 	private Dictionary<string, PokemonNetworkModel> _pokemonCache = new Dictionary<string, PokemonNetworkModel>();
-	public const string PokemonAPIString = "https://localhost:7217/pokemon/";
+	public const string PokemonAPIString = "http://localhost:5259/pokemon/";
 
 	private void Awake()
 	{
