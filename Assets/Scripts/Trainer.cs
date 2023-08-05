@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Trainer : MonoBehaviour
 {
-
     [SerializeField]
     public BattleRoomManager BattleRoomManager;
 
@@ -17,40 +16,74 @@ public class Trainer : MonoBehaviour
     [SerializeField]
     public Pokemon CurrentPokemon;
 
-    private EventMenu _eventMenu;
+    [SerializeField]
+    public int CurrentPokemonIndex;
 
-    public void Init(EventMenu eventMenu)
+    public void Init()
     {
-        _eventMenu = eventMenu;
         if(Pokemons.Count > 0)
         {
             SwitchPokemon(0);
         }
     }
 
-    public void Attack(Trainer target, PokemonMove move)
-    {
-		// Push to event string queue
-		_eventMenu.PushBattleEvent(new BattleEvent(string.Format("{0} used {1}", CurrentPokemon.Name, move.Name), 0));
-
-        // Calculate effects
-		_eventMenu.PushBattleEvent(new BattleEvent(string.Format("It was super effective!"), 0));
-
-		// Animation
-		StartCoroutine(ScriptableAnimations.Instance.Animations[move.AnimationName](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
-
-        // Invoke attack event
-        BattleRoomManager.TrainerAttack.Invoke(this, move);
+    public void QueueAttack(Trainer target, PokemonMove move)
+    { 
+        BattleRoomManager.QueueAttack(this, move);
     }
 
-    public void TakeDamage(PokemonMove move)
-    {
-		StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 1.0f));
+    public void QueueSwitch(int pokemonIndex)
+    { 
+        BattleRoomManager.QueueSwitch(this, pokemonIndex);
     }
 
-    private void SwitchPokemon(int index)
+    public void QueueFaint(int pokemonIndex) 
     {
+        BattleRoomManager.QueueFaint(this, pokemonIndex);
+    }
+
+    public IEnumerator Attack(Trainer target, PokemonMove move)
+    {
+		yield return StartCoroutine(ScriptableAnimations.Instance.Animations[move.AnimationName](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
+    }
+
+    public IEnumerator TakeDamage(PokemonMove move)
+    {
+		yield return StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 1.0f));
+
+        CurrentPokemon.CurrentHp -= move.Damage;
+
+        // Set death flag
+        if(CurrentPokemon.CurrentHp <= 0)
+        {
+            CurrentPokemon.IsDead = true;
+    	}
+    }
+
+    public IEnumerator Faint()
+    {
+        yield break;
+    }
+
+    public void SwitchPokemon(int index = -1)
+    {
+        if(index < 0)
+        {
+            for(int i = 0; i < Pokemons.Count; i++)
+            {
+                if (!Pokemons[i].IsDead)
+                { 
+					CurrentPokemon = Pokemons[i];
+					PokemonSprite.sprite = CurrentPokemon.Sprite;
+                    break;
+	        	}
+	        }
+            return;
+	    }
+
+        // Change data and sprite
         CurrentPokemon = Pokemons[index];
+        CurrentPokemonIndex = index;
         PokemonSprite.sprite = CurrentPokemon.Sprite;
     }
 }

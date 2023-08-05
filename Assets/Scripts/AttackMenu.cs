@@ -22,15 +22,19 @@ public class AttackMenu : Menu
 	{
         foreach (var button in _buttons)
         {
-            button.gameObject.SetActive(false);
+            Destroy(button.gameObject);
         }
+
+        _buttons.Clear();
 	}
 	public override void OnOpen()
 	{
-        foreach (var button in _buttons)
+        if(_buttons.Count > 0)
         {
-            button.gameObject.SetActive(true);
-        }
+            return;
+	    }
+
+        InitAttackButtons();
 	}
 	public override void OnFirstOpen()
     {
@@ -47,7 +51,8 @@ public class AttackMenu : Menu
 
             button.onClick.AddListener(() => 
             {
-                _battleRoomManger.Trainer_1.Attack(_battleRoomManger.Trainer_2, move);
+                _battleRoomManger.Trainer_1.QueueAttack(_battleRoomManger.Trainer_2, move);
+                _battleRoomManger.ClientPushedEvent.Invoke();
             });
 
             _buttons.Add(button);

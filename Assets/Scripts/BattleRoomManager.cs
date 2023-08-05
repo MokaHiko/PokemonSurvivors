@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.Events;
 
 public class BattleRoomManager : MonoBehaviour
 {
+	public UnityEvent ClientPushedEvent;
+	public UnityEvent TurnStart;
+	public UnityEvent TurnEnd;
+
 	[SerializeField]
 	public Trainer Trainer_1;
 
@@ -16,36 +18,49 @@ public class BattleRoomManager : MonoBehaviour
 	[SerializeField]
 	public MenuManager MenuManager;
 
-	// Trainer : attacker , PokemonMove : Moved used by attacker
-	public UnityEvent<Trainer, PokemonMove> TrainerAttack;
+	private TurnSolver _solver;
+	private bool Trainer_1_ActedFlag = false;
+	private bool Trainer_2_ActedFlag = false;
 
 	// Start is called before the first frame update
-	async void Start()
+	void Start()
 	{
-		await LoadPokemonData();
+		SpawnRandomTrainer(Trainer_2);
+		SpawnRandomTrainer(Trainer_1, OnFinishedLoad);
 
-		// Subscribe to events
-		TrainerAttack.AddListener(OnTrainerAttack);
+		// Create turn solver
+		_solver = new TurnSolver();
 	}
-	private async Task LoadPokemonData()
-	{
-		int ctr = 0;
-		Trainer_1.Pokemons.ForEach((Pokemon pokemon) =>
-		{
-			if (pokemon == null)
-			{
-				return;
-			}
-			
-            StartCoroutine(BattleRoomNetworkManager.Instance.FetchPokemonData(pokemon.Name, (PokemonNetworkModel pokemonData) =>
-            {
-                Pokemon newPokemon = ScriptableObject.CreateInstance(nameof(Pokemon)) as Pokemon;
-                newPokemon.Name = pokemonData.Name;
-                newPokemon.Attack = pokemonData.Attack;
-                newPokemon.Hp = pokemonData.Hp;
-                newPokemon.Speed = pokemonData.Speed;
-                newPokemon.SpecialAttack = pokemonData.SpecialAttack;
 
+	private IEnumerator LoadTrainerPokemonData(Trainer trainer, UnityAction callback = null)
+	{
+		// Load pokemon data and sprite URLS
+		List<string> spriteUrls = new List<string>();
+
+		for(int i = 0; i < trainer.Pokemons.Count; i++)
+		{
+			if (trainer.Pokemons[i] == null)
+			{
+				continue;
+			}
+
+			yield return StartCoroutine(BattleRoomNetworkManager.Instance.FetchPokemonData(trainer.Pokemons[i].Name, (PokemonNetworkModel pokemonData) =>
+            {
+				// Create pokemon scriptable object
+                Pokemon newPokemon = trainer.Pokemons[i];
+                newPokemon.Name = pokemonData.Name;
+                newPokemon.Hp = pokemonData.Hp;
+                newPokemon.Attack = pokemonData.Attack;
+                newPokemon.Defense = pokemonData.Defense;
+                newPokemon.SpecialDefense = pokemonData.SpecialDefense;
+                newPokemon.SpecialAttack = pokemonData.SpecialAttack;
+                newPokemon.Speed = pokemonData.Speed;
+
+				// EVS & IVS
+				newPokemon.CurrentHp = newPokemon.Hp;
+
+				// Create move scriptable object
+                newPokemon.Moves.Clear();
                 for (int i = 0; i < 4; i++)
                 {
                     PokemonMove move = ScriptableObject.CreateInstance(nameof(PokemonMove)) as PokemonMove;
@@ -58,52 +73,167 @@ public class BattleRoomManager : MonoBehaviour
                     newPokemon.Moves.Add(move);
                 }
 
-				// Load Pokemon Sprite
-				StartCoroutine(BattleRoomNetworkManager.Instance.FetchImage(pokemonData.BackSpriteUrl, (Texture2D texture) =>
-				{
-					Rect rect = new Rect(0, 0, texture.width, texture.height);
-					Trainer_1.Pokemons[0].Sprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
-
-                    OnFinishedLoad();
-				}));
-
-                Trainer_1.Pokemons[ctr++] = newPokemon;
+				if(trainer == Trainer_1)
+				{ 
+					spriteUrls.Add(pokemonData.BackSpriteUrl);
+				}
+				else
+				{ 
+					spriteUrls.Add(pokemonData.FrontSpriteUrl);
+				}
             }));
-		});
+		};
 
-		// Todo: Do the same for trainer 2 
-		await Task.Yield();
+		// Load Sprites
+		for(int i = 0; i < spriteUrls.Count; i++)
+		{ 
+			yield return StartCoroutine(BattleRoomNetworkManager.Instance.FetchImage(spriteUrls[i], (Texture2D texture) =>
+			{
+				Rect rect = new Rect(0, 0, texture.width, texture.height);
+				trainer.Pokemons[i].Sprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f));
+			}));
+		}
+
+		if(callback != null)
+		{ 
+			callback();
+		}
 	}
 
 	private void OnFinishedLoad()
 	{
-		EventMenu eventMenu = MenuManager.FindMenu<EventMenu>();
-        Trainer_1.Init(eventMenu);
+        Trainer_1.Init();
 
-		MenuManager.Init();
+		MenuManager.OpenMenu<AttackMenu>();
+		MenuManager.OpenMenu<SwitchMenu>();
 	}
 
-	private void OnTrainerAttack(Trainer attacker, PokemonMove move)
+	private void SpawnRandomTrainer(Trainer trainer, UnityAction callback = null)
+	{
+		foreach(Pokemon pokemon in trainer.Pokemons)
+		{
+			DestroyImmediate(pokemon, true);
+		}
+
+
+		// TODO: Add Gym Leader Spawn animation
+		int pokemonCount = Random.Range(0, 7);
+		trainer.Pokemons = new List<Pokemon>();
+		for(int i = 0;  i < pokemonCount; i++)
+	    {
+            Pokemon newPokemon = ScriptableObject.CreateInstance(nameof(Pokemon)) as Pokemon;
+			newPokemon.Name = Random.Range(1, 1001).ToString();
+			trainer.Pokemons.Add(newPokemon);
+		}
+
+		StartCoroutine(LoadTrainerPokemonData(trainer, () => {
+			trainer.Init();
+
+			if(callback != null)
+			{
+				callback();
+			}
+		}));
+    }
+
+
+	public void QueueAttack(Trainer attacker, PokemonMove move)
+	{
+		if(attacker == Trainer_1)
+		{
+			Trainer_1_ActedFlag = true;
+			_solver.PushAttack(new AttackBattleAction(Trainer_1, Trainer_2, move));
+		}
+		else if(attacker == Trainer_2)
+		{
+			Trainer_2_ActedFlag = true;
+			_solver.PushAttack(new AttackBattleAction(Trainer_2, Trainer_1, move));
+		}
+
+		if(Trainer_1_ActedFlag && Trainer_2_ActedFlag)
+		{
+			StartCoroutine(FlushActions());
+		}
+	}
+
+	public void QueueSwitch(Trainer trainer, int switchIndex)
+	{
+		if(trainer == Trainer_1)
+		{
+			Trainer_1_ActedFlag = true;
+			_solver.PushSwitch(new SwitchBattleAction(Trainer_1, switchIndex));
+		}
+		else if(trainer == Trainer_2)
+		{
+			Trainer_2_ActedFlag = true;
+			_solver.PushSwitch(new SwitchBattleAction(Trainer_2, switchIndex));
+		}
+
+		if(Trainer_1_ActedFlag && Trainer_2_ActedFlag)
+		{
+			StartCoroutine(FlushActions());
+		}
+	}
+
+	public void QueueFaint(Trainer trainer, int faintIndex)
+	{
+		if(trainer == Trainer_1)
+		{
+			Trainer_1_ActedFlag = true;
+			_solver.PushFaint(new FaintBattleAction(Trainer_1, faintIndex));
+		}
+		else if(trainer == Trainer_2)
+		{
+			Trainer_2_ActedFlag = true;
+			_solver.PushFaint(new FaintBattleAction(Trainer_2, faintIndex));
+		}
+
+		if(Trainer_1_ActedFlag && Trainer_2_ActedFlag)
+		{
+			StartCoroutine(FlushActions());
+		}
+	}
+
+	private IEnumerator FlushActions()
 	{
 		// Open event menu
 		EventMenu eventMenu = MenuManager.FindMenu<EventMenu>();
 		MenuManager.OpenMenu(eventMenu);
 
-		if(attacker == Trainer_1)
-		{
-			Trainer_2.TakeDamage(move);
-		}
-		else if(attacker == Trainer_2)
-		{
-			Trainer_1.TakeDamage(move);
+		// Recursively solve turn	
+		List<BattleAction> actions = _solver.Solve();
+		while(actions.Count > 0)
+		{ 
+			// Perform solved trun
+			foreach(BattleAction action in actions)
+			{
+				// Reset actions flags ahead
+				Trainer_1_ActedFlag = false;
+				Trainer_2_ActedFlag = false;
+
+				// Check if invalidated 
+				if(action.Invalidated)
+				{
+					continue;
+				}
+
+				// Push to Log queue
+				eventMenu.PushBattleAction(action);
+
+				yield return action.Act(actions);
+			}
+
+			yield return StartCoroutine(eventMenu.FlushAndPresentBattleActionQueue());
+
+			actions = _solver.Solve();
 		}
 
-		// Flush event queue
-		StartCoroutine(eventMenu.FlushBattleEventQueue(OnBattleEventsPresented));
-	}
-	private void OnBattleEventsPresented()
+		OnTurnExecuted();
+    }
+
+	private void OnTurnExecuted()
 	{
-        Menu attackMenu = MenuManager.FindMenu<AttackMenu>();
-        MenuManager.OpenMenu(attackMenu, true);
+        MenuManager.OpenMenu<AttackMenu>(true);
+		MenuManager.OpenMenu<SwitchMenu>();
 	}
 }

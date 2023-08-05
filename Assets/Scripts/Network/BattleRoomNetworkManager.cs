@@ -36,13 +36,12 @@ public class BattleRoomNetworkManager : MonoBehaviour
         yield return request.SendWebRequest();
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            // TODO: Handle no connection
-            Debug.Log(request.error);
+            Debug.Log(request.error + " [Endpoint]: " + PokemonAPIString + pokemonName);
         }
         else
         {
             // Add to pokemon cache
-            PokemonNetworkModel pokemon = new PokemonNetworkModel();
+            PokemonNetworkModel pokemon;
             string rawJson = request.downloadHandler.text;
             pokemon = JsonUtility.FromJson<PokemonNetworkModel>(rawJson);
 

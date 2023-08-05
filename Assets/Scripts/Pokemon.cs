@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Pokemon", fileName = "pokemon")]
 public class Pokemon : ScriptableObject
 {
+    // Pokemon stats
     public string Name;
     public Sprite Sprite;
     public int Hp;
@@ -14,5 +15,10 @@ public class Pokemon : ScriptableObject
     public int SpecialDefense;
     public int Speed;
 
+    // Current values
+    public int CurrentHp;
+    public bool IsDead = false;
+
     public List<PokemonMove> Moves = new List<PokemonMove>(4);
 }
+

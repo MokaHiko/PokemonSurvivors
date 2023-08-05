@@ -8,13 +8,6 @@ public class MenuManager : MonoBehaviour
     [SerializeField] 
     private List<Menu> _menus;
 
-    [SerializeField] 
-    private Menu _startingMenu;
-
-    public void Init()
-    {
-        OpenMenu(_startingMenu, true);
-    }
     public T FindMenu<T>()
     {
         foreach(Menu m in _menus)
@@ -26,6 +19,29 @@ public class MenuManager : MonoBehaviour
         }
 
         return default(T);
+    }
+    public void OpenMenu<T>(bool closeOthers = false)
+    {
+        foreach(Menu m in _menus)
+        {
+            if (m is T)
+            {
+                if(m.FirstOpen)
+                {
+                    m.OnFirstOpen();
+	        	}
+                else
+                { 
+                    m.OnOpen();
+	        	}
+                m.gameObject.SetActive(true);
+            }
+            else if(closeOthers)
+            {
+                m.gameObject.SetActive(false);
+                m.OnClose();
+	        }
+        }
     }
 
     public void OpenMenu(Menu menu, bool closeOthers = false)
