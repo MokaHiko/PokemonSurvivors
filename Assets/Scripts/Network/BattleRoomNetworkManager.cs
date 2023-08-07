@@ -8,9 +8,17 @@ using UnityEngine.Networking;
 
 public class BattleRoomNetworkManager : MonoBehaviour
 {
+    [NonSerialized]
 	public static BattleRoomNetworkManager Instance = null;
+
+    [SerializeField]
+    public Texture2D DefaultTexture2D = null;
+
+    [SerializeField]
+    public Pokemon DefaultPokemon = null;
+
 	private Dictionary<string, PokemonNetworkModel> _pokemonCache = new Dictionary<string, PokemonNetworkModel>();
-	public const string PokemonAPIString = "http://localhost:5259/pokemon/";
+	private const string PokemonAPIString = "http://localhost:5259/pokemon/";
 
 	private void Awake()
 	{
@@ -59,21 +67,8 @@ public class BattleRoomNetworkManager : MonoBehaviour
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error + " [Endpoint]: " + imageUrl);
-        }
-        else
-        {
-            var texture = DownloadHandlerTexture.GetContent(request);
-            callback(texture);
-        }
-    }
-	public IEnumerator FetchImageRaw(string imageUrl, UnityAction<Texture2D> callback)
-	{
-        using UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageUrl);
-        yield return request.SendWebRequest();
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(request.error + " [Endpoint]: " + imageUrl);
+            Debug.Log("Defaulting to built in sprite.");
+            callback(DefaultTexture2D);
         }
         else
         {

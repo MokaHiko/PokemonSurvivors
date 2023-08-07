@@ -61,7 +61,8 @@ public class BattleRoomManager : MonoBehaviour
 
 				// Create move scriptable object
                 newPokemon.Moves.Clear();
-                for (int i = 0; i < 4; i++)
+				int moveCount = Mathf.Min(4, pokemonData.Moves.Length);
+                for (int i = 0; i < moveCount; i++)
                 {
                     PokemonMove move = ScriptableObject.CreateInstance(nameof(PokemonMove)) as PokemonMove;
                     move.Name = pokemonData.Moves[i].Name;
@@ -117,7 +118,7 @@ public class BattleRoomManager : MonoBehaviour
 
 
 		// TODO: Add Gym Leader Spawn animation
-		int pokemonCount = Random.Range(0, 7);
+		int pokemonCount = Random.Range(1, 7);
 		trainer.Pokemons = new List<Pokemon>();
 		for(int i = 0;  i < pokemonCount; i++)
 	    {
