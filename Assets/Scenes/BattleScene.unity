@@ -169,14 +169,148 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BattleRoomManager: {fileID: 1574876011}
   Pokemons:
-  - {fileID: 11400000, guid: de83f5c81c09237468b1e6b6398716ee, type: 2}
-  - {fileID: 11400000, guid: fa88f7cb6f9904f9d98365bef522198d, type: 2}
-  - {fileID: 11400000, guid: eac388598a4a4b04b8f3750dc293c572, type: 2}
-  - {fileID: 11400000, guid: 48d31caf89cd8464993c181904ef785a, type: 2}
-  - {fileID: 11400000, guid: 48d31caf89cd8464993c181904ef785a, type: 2}
-  - {fileID: 11400000, guid: 48d31caf89cd8464993c181904ef785a, type: 2}
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
   PokemonSprite: {fileID: 1234343775}
-  CurrentPokemon: {fileID: 0}
+  CurrentPokemon:
+    Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
   CurrentPokemonIndex: 0
 --- !u!4 &243234998
 Transform:
@@ -428,7 +562,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultTexture2D: {fileID: 2800000, guid: d4374f48ebb34394a90c82cfee74395c, type: 3}
-  DefaultPokemon: {fileID: 0}
+  DefaultPokemon:
+    Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
 --- !u!1 &582031040
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,11 +839,88 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BattleRoomManager: {fileID: 1574876011}
   Pokemons:
-  - {fileID: 11400000, guid: a43c596d9be66c5459f0c7ffabd96161, type: 2}
-  - {fileID: 11400000, guid: 1cc38ed3a41339842986b82cdbdd2c3d, type: 2}
-  - {fileID: 0}
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
+  - Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
   PokemonSprite: {fileID: 1094586103}
-  CurrentPokemon: {fileID: 0}
+  CurrentPokemon:
+    Name: 
+    Level: 100
+    Sprite: {fileID: 0}
+    Ivs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    Evs:
+      Hp: 0
+      Attack: 0
+      Defense: 0
+      SpecialAttack: 0
+      SpecialDefense: 0
+      Speed: 0
+    CurrentHp: 0
+    IsDead: 0
+    Moves: []
   CurrentPokemonIndex: 0
 --- !u!1 &1234343774
 GameObject:
@@ -900,6 +1131,10 @@ PrefabInstance:
     - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_Name
       value: EnemyPokemonStatus
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 579878ed860254325a0e610d2f8272af, type: 3}
@@ -1207,6 +1442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b3a9f8362a1e04baece88faff7475e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shadowBallPrefab: {fileID: 6371061028292570033, guid: 30f38d13586cbf44fa809bbca65a2d8a, type: 3}
 --- !u!1 &1581568393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1710,6 +1946,10 @@ PrefabInstance:
     - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_Name
       value: PlayerPokemonStatus
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 579878ed860254325a0e610d2f8272af, type: 3}

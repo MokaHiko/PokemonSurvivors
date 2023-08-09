@@ -68,8 +68,8 @@ public class BattleRoomManager : MonoBehaviour
                     move.Name = pokemonData.Moves[i].Name;
                     move.Damage = pokemonData.Moves[i].Damage;
                     move.Accuracy = pokemonData.Moves[i].Accuracy;
-                    move.AnimationName = "MoveTowards";
-                    move.AnimationDuration = 1;
+                    move.AnimationName = "ShadowBall";
+                    move.AnimationDuration = 0.5f;
 
                     newPokemon.Moves.Add(move);
                 }
@@ -111,19 +111,13 @@ public class BattleRoomManager : MonoBehaviour
 
 	private void SpawnRandomTrainer(Trainer trainer, UnityAction callback = null)
 	{
-		foreach(Pokemon pokemon in trainer.Pokemons)
-		{
-			DestroyImmediate(pokemon, true);
-		}
-
-
 		// TODO: Add Gym Leader Spawn animation
 		int pokemonCount = Random.Range(1, 7);
 		trainer.Pokemons = new List<Pokemon>();
 		for(int i = 0;  i < pokemonCount; i++)
 	    {
-            Pokemon newPokemon = ScriptableObject.CreateInstance(nameof(Pokemon)) as Pokemon;
-			newPokemon.Name = Random.Range(1, 1001).ToString();
+            Pokemon newPokemon = new Pokemon();
+			newPokemon.Name = Random.Range(1, 500).ToString();
 			trainer.Pokemons.Add(newPokemon);
 		}
 

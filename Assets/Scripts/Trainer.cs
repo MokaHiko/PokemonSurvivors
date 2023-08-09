@@ -47,11 +47,25 @@ public class Trainer : MonoBehaviour
 		yield return StartCoroutine(ScriptableAnimations.Instance.Animations[move.AnimationName](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
     }
 
-    public IEnumerator TakeDamage(PokemonMove move)
+    public IEnumerator TakeDamage(Pokemon attacker, PokemonMove move)
     {
-		yield return StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 1.0f));
+		yield return StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 0.50f));
 
-        CurrentPokemon.CurrentHp -= move.Damage;
+        Pokemon defender = CurrentPokemon;
+
+        float ePower = move.Damage;
+        float eAttackStat = move.Type == PokemonMove.MoveType.Special ? attacker.SpecialAttack : attacker.Attack;
+        float eDefenseStat = move.Type == PokemonMove.MoveType.Special ? defender.SpecialDefense : defender.Defense;
+
+        float damage = (((((2 * attacker.Level) / 5.0f) + 2) * ePower * (eAttackStat/eDefenseStat)) / 50) + 2;
+
+        float critMultiplier = Random.Range(0.0f, 1.0f) <= (1.0f/24.0f) ? 1.5f : 1.0f;
+        damage *= critMultiplier;
+
+        float random = (float)((int)Random.Range(86, 100) / 100.0f);
+        damage *= random;
+
+        CurrentPokemon.CurrentHp -= damage;
 
         // Set death flag
         if(CurrentPokemon.CurrentHp <= 0)
@@ -62,7 +76,7 @@ public class Trainer : MonoBehaviour
 
     public IEnumerator Faint()
     {
-        yield break;
+        yield return StartCoroutine(ScriptableAnimations.Instance.Animations["Faint"](PokemonSprite, PokemonSprite, 1.0f));
     }
 
     public void SwitchPokemon(int index = -1)

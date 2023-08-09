@@ -54,7 +54,7 @@ public class AttackBattleAction : BattleAction
     {
         yield return Actor.Attack(Defender, _move);
 
-        yield return Defender.TakeDamage(_move);
+        yield return Defender.TakeDamage(AttackerPokemon, _move);
 
         if (Defender.CurrentPokemon.IsDead)
         {
@@ -120,7 +120,9 @@ public class FaintBattleAction: BattleAction
 
     public override IEnumerator Act(List<BattleAction> actions)
     {
-        // TODO: Faint Animation
+        // Faintanimation
+        yield return Actor.Faint();
+
         for(int i = 0; i < Actor.Pokemons.Count; i++)
         {
             if (!Actor.Pokemons[i].IsDead)
