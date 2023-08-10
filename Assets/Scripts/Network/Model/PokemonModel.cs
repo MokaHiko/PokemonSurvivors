@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+
 [System.Serializable]
 public class PokemonMoveNetworkModel
 {
     public string Name;
+    public string Type; 
+    public string DamageClass;
+
     public int Damage;
     public int Accuracy;
 };
@@ -10,8 +15,11 @@ public class PokemonMoveNetworkModel
 public class PokemonNetworkModel
 {
     public string Name;
+    public List<string> Types;
+
     public string FrontSpriteUrl;
     public string BackSpriteUrl;
+
     public int Hp;
     public int Attack;
     public int Defense;
@@ -19,5 +27,5 @@ public class PokemonNetworkModel
     public int SpecialDefense;
     public int Speed;
 
-    public PokemonMoveNetworkModel[] Moves;
+    public List<PokemonMoveNetworkModel> Moves;
 }

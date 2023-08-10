@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static PokemonMove;
 
 public class BattleRoomManager : MonoBehaviour
 {
@@ -25,8 +27,8 @@ public class BattleRoomManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		SpawnRandomTrainer(Trainer_2);
-		SpawnRandomTrainer(Trainer_1, OnFinishedLoad);
+		SpawnRandomTrainer(Trainer_2, () => StartCoroutine(Trainer_2.Init()));
+		SpawnRandomTrainer(Trainer_1, () => StartCoroutine(OnFinishedLoad()));
 
 		// Create turn solver
 		_solver = new TurnSolver();
@@ -49,6 +51,7 @@ public class BattleRoomManager : MonoBehaviour
 				// Create pokemon scriptable object
                 Pokemon newPokemon = trainer.Pokemons[i];
                 newPokemon.Name = pokemonData.Name;
+				newPokemon.Types = pokemonData.Types.ConvertAll<PokemonType>(typeString => (PokemonType)Enum.Parse(typeof(PokemonType), typeString, true));
                 newPokemon.Hp = pokemonData.Hp;
                 newPokemon.Attack = pokemonData.Attack;
                 newPokemon.Defense = pokemonData.Defense;
@@ -56,16 +59,26 @@ public class BattleRoomManager : MonoBehaviour
                 newPokemon.SpecialAttack = pokemonData.SpecialAttack;
                 newPokemon.Speed = pokemonData.Speed;
 
-				// EVS & IVS
 				newPokemon.CurrentHp = newPokemon.Hp;
 
 				// Create move scriptable object
                 newPokemon.Moves.Clear();
-				int moveCount = Mathf.Min(4, pokemonData.Moves.Length);
+				int moveCount = Mathf.Min(4, pokemonData.Moves.Count);
                 for (int i = 0; i < moveCount; i++)
                 {
                     PokemonMove move = ScriptableObject.CreateInstance(nameof(PokemonMove)) as PokemonMove;
                     move.Name = pokemonData.Moves[i].Name;
+
+                    if(Enum.TryParse<PokemonType>(pokemonData.Moves[i].Type, out move.Type))
+					{ 
+						Debug.Log("Parse failure for type: " + pokemonData.Moves[i].Type);
+					}
+
+                    if(Enum.TryParse<PokemonDamageClass>(pokemonData.Moves[i].DamageClass, out move.DamageClass))
+					{ 
+						Debug.Log("Parse failure for damage class : " + pokemonData.Moves[i].DamageClass);
+					}
+
                     move.Damage = pokemonData.Moves[i].Damage;
                     move.Accuracy = pokemonData.Moves[i].Accuracy;
                     move.AnimationName = "ShadowBall";
@@ -101,9 +114,9 @@ public class BattleRoomManager : MonoBehaviour
 		}
 	}
 
-	private void OnFinishedLoad()
+	private IEnumerator OnFinishedLoad()
 	{
-        Trainer_1.Init();
+        yield return Trainer_1.Init();
 
 		MenuManager.OpenMenu<AttackMenu>();
 		MenuManager.OpenMenu<SwitchMenu>();
@@ -112,18 +125,16 @@ public class BattleRoomManager : MonoBehaviour
 	private void SpawnRandomTrainer(Trainer trainer, UnityAction callback = null)
 	{
 		// TODO: Add Gym Leader Spawn animation
-		int pokemonCount = Random.Range(1, 7);
+		int pokemonCount = UnityEngine.Random.Range(1, 7);
 		trainer.Pokemons = new List<Pokemon>();
 		for(int i = 0;  i < pokemonCount; i++)
 	    {
             Pokemon newPokemon = new Pokemon();
-			newPokemon.Name = Random.Range(1, 500).ToString();
+			newPokemon.Name = UnityEngine.Random.Range(1, 500).ToString();
 			trainer.Pokemons.Add(newPokemon);
 		}
 
 		StartCoroutine(LoadTrainerPokemonData(trainer, () => {
-			trainer.Init();
-
 			if(callback != null)
 			{
 				callback();
@@ -216,9 +227,8 @@ public class BattleRoomManager : MonoBehaviour
 				eventMenu.PushBattleAction(action);
 
 				yield return action.Act(actions);
+				yield return StartCoroutine(eventMenu.FlushAndPresentBattleActionQueue());
 			}
-
-			yield return StartCoroutine(eventMenu.FlushAndPresentBattleActionQueue());
 
 			actions = _solver.Solve();
 		}

@@ -186,6 +186,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -206,6 +207,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -226,6 +228,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -246,6 +249,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -266,6 +270,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -286,6 +291,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -308,6 +314,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -580,6 +587,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -856,6 +864,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -876,6 +885,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -896,6 +906,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -918,6 +929,7 @@ MonoBehaviour:
       SpecialAttack: 0
       SpecialDefense: 0
       Speed: 0
+    Types: 
     CurrentHp: 0
     IsDead: 0
     Moves: []
@@ -1443,6 +1455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shadowBallPrefab: {fileID: 6371061028292570033, guid: 30f38d13586cbf44fa809bbca65a2d8a, type: 3}
+  _pokeballPrefab: {fileID: 3784197218676802808, guid: fad4b95869ec64048b4c4e3a8cf80c44, type: 3}
 --- !u!1 &1581568393
 GameObject:
   m_ObjectHideFlags: 0

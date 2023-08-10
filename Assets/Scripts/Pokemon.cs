@@ -3,6 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+public enum PokemonType
+{
+    Unknown,
+    Normal,  
+    Fire, 
+    Water,  
+    Grass,  
+    Electric, 
+    Ice, 
+    Fighting, 
+    Poison, 
+    Ground, 
+    Flying, 
+    Psychic,  
+    Bug, 
+    Rock, 
+    Ghost, 
+    Dark, 
+    Dragon, 
+    Steel, 
+    Fairy
+}
+
+[Serializable]
 public class IVS
 {
     public int Hp;
@@ -33,6 +57,8 @@ public class Pokemon
 
     public IVS Ivs = new IVS();
     public EVS Evs = new EVS();
+
+    public List<PokemonType> Types = new List<PokemonType>();
     public int Hp
     {
         get { return (2 * _hp + Ivs.Hp + (Evs.Hp/4) * Level) + Level + 10; }

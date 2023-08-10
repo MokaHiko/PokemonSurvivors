@@ -15,6 +15,9 @@ public class ScriptableAnimations : MonoBehaviour
     [SerializeField]
     private GameObject _shadowBallPrefab;
 
+    [SerializeField]
+    private GameObject _pokeballPrefab;
+
     public static ScriptableAnimations Instance = null;
 
     public delegate IEnumerator ScriptableAnimation<T0, T1, T2>(T0 arg0, T1 arg1, T2 arg2);
@@ -31,6 +34,7 @@ public class ScriptableAnimations : MonoBehaviour
 		{
             Animations = new Dictionary<string, ScriptableAnimation<SpriteRenderer, SpriteRenderer, float>>()
             {
+                {nameof(PokeballThrow), PokeballThrow},
                 {nameof(Faint), Faint},
                 {nameof(MoveTowards), MoveTowards },
                 {nameof(SquashAndSqueeze), SquashAndSqueeze},
@@ -40,6 +44,37 @@ public class ScriptableAnimations : MonoBehaviour
 			Instance = this;
 		}
 	}
+    private IEnumerator PokeballThrow(SpriteRenderer p1, SpriteRenderer p2, float duration)
+    {
+        p1.color = Vector4.zero;
+        var pokeBall = Instantiate(_pokeballPrefab, p1.transform.position - new Vector3(0, 5.0f, 0), p1.transform.rotation);
+        Vector3 targetPosition1 = p1.transform.position + new Vector3(0.0f, 1.0f, 0.0f);
+        Vector3 targetPosition2 = p1.transform.position;
+
+        float halfDuration = duration / 2;
+
+        float elapsedTime = 0;
+        while (elapsedTime < halfDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            pokeBall.transform.position = Vector3.Slerp(pokeBall.transform.position, targetPosition1, (elapsedTime / halfDuration));
+            pokeBall.transform.rotation = Quaternion.Euler(0, 0, elapsedTime * 360);
+            yield return null;
+        }
+
+        elapsedTime = 0;
+        while (elapsedTime < halfDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            pokeBall.transform.position = Vector3.Lerp(pokeBall.transform.position, targetPosition2, (elapsedTime / halfDuration));
+            pokeBall.transform.rotation = Quaternion.Euler(0, 0, elapsedTime * 360);
+            yield return null;
+        }
+
+        p1.color = Vector4.one;
+        Destroy(pokeBall);
+    }
+
     private IEnumerator Faint(SpriteRenderer p1, SpriteRenderer p2, float duration)
     {
         Vector3 originalPosition = p1.transform.position;

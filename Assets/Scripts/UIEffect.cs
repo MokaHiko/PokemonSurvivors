@@ -25,10 +25,6 @@ public class UIEffect : MonoBehaviour
     private Vector2 _originalAnchorPosition;
     private Vector3 _originalRotation;
 
-    private void Awake()
-    {
-    }
-
     private void OnEnable()
     {
         _rectTransform = gameObject.GetComponent<RectTransform>();

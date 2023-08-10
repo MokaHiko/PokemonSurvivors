@@ -95,9 +95,7 @@ public class SwitchBattleAction : BattleAction
 
     public override IEnumerator Act(List<BattleAction> actions)
     {
-        // TODO: Switch Animation
-        Actor.SwitchPokemon(SwitchIndex);
-        yield break;
+        yield return Actor.SwitchPokemon(SwitchIndex);
     }
 
     public override string ToString()

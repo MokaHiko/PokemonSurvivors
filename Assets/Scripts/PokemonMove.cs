@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "PokemonMove", fileName = "move")]
 public class PokemonMove: ScriptableObject
 {
-    public enum MoveType
+    public enum PokemonDamageClass
     {
         Unknown,
         Special,
@@ -11,9 +11,11 @@ public class PokemonMove: ScriptableObject
     }
 
     public string Name;
+    public PokemonType Type;
+    public PokemonDamageClass DamageClass;
+
     public int Damage;
     public float Accuracy;
-    public MoveType Type = MoveType.Unknown;
 
     public string AnimationName;
     public float AnimationDuration;
