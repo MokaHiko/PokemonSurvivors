@@ -1,6 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using static PokemonMove;
+
+[Flags]
+public enum PokemonAttackMask: UInt32
+{
+    Normal = PokemonType.Fighting,
+    Fire = PokemonType.Water | PokemonType.Ground | PokemonType.Rock,
+    Water = PokemonType.Grass,
+    Grass = PokemonType.Fire,
+    Electric = PokemonType.Ground,
+    Ice = PokemonType.Fire,
+    Fighting = PokemonType.Fairy,
+    Poison  = PokemonType.Ground | PokemonType.Psychic,
+    Ground  = PokemonType.Ice,
+    Flying  = PokemonType.Electric,
+    Psychic = PokemonType.Dark,
+    Bug = PokemonType.Fire,
+    Rock = PokemonType.Fire,
+    Ghost = PokemonType.Dark,
+    Dark = PokemonType.Fighting,
+    Dragon = PokemonType.Fairy,
+    Steel = PokemonType.Fire,
+    Fairy = PokemonType.Steel,
+}
 
 public enum BattleActionType
 {
@@ -17,9 +41,10 @@ public class BattleAction
     public bool Invalidated = false;
 
     public virtual IEnumerator Act(List<BattleAction> actions) { yield break; }
-    public override string ToString() { return ""; }
-}
 
+    public override string ToString() { return ""; }
+    public List<String> Details = new List<String>();
+}
 
 public class ItemUseBattleAction
 { 
@@ -28,9 +53,10 @@ public class ItemUseBattleAction
 public class AttackBattleAction : BattleAction
 {
     public Pokemon AttackerPokemon;
+    public PokemonMove Move;
 
     public Trainer Defender;
-    public PokemonMove _move;
+    public Pokemon DefenderPokemon;
 
     public int Priority = 0;
 
@@ -40,21 +66,65 @@ public class AttackBattleAction : BattleAction
         Type = BattleActionType.Attack;
 
         AttackerPokemon = Actor.CurrentPokemon;
-        _move = move;
+        Move = move;
 
         Defender = defender;
+        DefenderPokemon = Defender.CurrentPokemon;
     }
 
     public override string ToString()
     {
-        return string.Format("{0} used {1}", AttackerPokemon.Name, _move.Name);
+        return string.Format("{0} used {1}", AttackerPokemon.Name, Move.Name);
     }
 
     public override IEnumerator Act(List<BattleAction> actions)
     {
-        yield return Actor.Attack(Defender, _move);
+        yield return Actor.Attack(Defender, Move);
 
-        yield return Defender.TakeDamage(AttackerPokemon, _move);
+        float ePower = Move.Damage;
+        float eAttackStat = Move.DamageClass == PokemonDamageClass.Special ? AttackerPokemon.SpecialAttack : AttackerPokemon.Attack;
+        float eDefenseStat = Move.DamageClass == PokemonDamageClass.Special ? DefenderPokemon.SpecialDefense : DefenderPokemon.Defense;
+
+        float damage = (((((2 * AttackerPokemon.Level) / 5.0f) + 2) * ePower * (eAttackStat/eDefenseStat)) / 50) + 2;
+
+        bool isStab = false; 
+        foreach(PokemonType attackerType in AttackerPokemon.Types)
+        {
+            if (attackerType == Move.Type)
+            {
+                isStab = true;
+            }
+        }
+
+        float stabMultiplier = isStab ? 1.5f : 1.0f;
+        damage *= stabMultiplier;
+
+        // TODO: Type multiplier
+        //float typeMultiplier = 1.0f;
+        //foreach(PokemonType type in AttackerPokemon.Types) 
+        //{
+        //    if (Enum.TryParse<PokemonAttackMask>(DefenderPokemon.Types[0].ToString(), out var attackMask))
+        //    {
+        //        if(((UInt32)PokemonAttackMask.Fire | (UInt32)type) > 1)
+        //        {
+        //        }
+        //    }
+        //}
+        //damage *= typeMultiplier;
+
+        bool isCrit = UnityEngine.Random.Range(0.0f, 1.0f) <= (1.0f / 24.0f);
+        float critMultiplier =  isCrit ? 1.5f : 1.0f;
+        damage *= critMultiplier;
+
+        if (isCrit)
+        {
+            Details.Add("It's a critical hit!");
+        }
+
+        float random = (float)((int)UnityEngine.Random.Range(86, 100) / 100.0f);
+        damage *= random;
+
+        yield return Defender.TakeDamage(AttackerPokemon, damage);
 
         if (Defender.CurrentPokemon.IsDead)
         {
@@ -73,7 +143,6 @@ public class AttackBattleAction : BattleAction
                 actions[invalidatedIndex].Invalidated = true;
 	        }
 
-            // Queue defender for fainting 
             Defender.QueueFaint(Defender.CurrentPokemonIndex);
     	}
     }

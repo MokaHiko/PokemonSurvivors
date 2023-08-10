@@ -7,7 +7,8 @@ public class PokemonMove: ScriptableObject
     {
         Unknown,
         Special,
-        Physical
+        Physical,
+        Status
     }
 
     public string Name;

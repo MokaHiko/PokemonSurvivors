@@ -1,29 +1,31 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
+[Flags]
 [Serializable]
-public enum PokemonType
+public enum PokemonType : UInt32
 {
-    Unknown,
-    Normal,  
-    Fire, 
-    Water,  
-    Grass,  
-    Electric, 
-    Ice, 
-    Fighting, 
-    Poison, 
-    Ground, 
-    Flying, 
-    Psychic,  
-    Bug, 
-    Rock, 
-    Ghost, 
-    Dark, 
-    Dragon, 
-    Steel, 
-    Fairy
+    Unknown = 0,
+    Normal = 1 << 1,  
+    Fire = 1 << 2, 
+    Water = 1 << 3,  
+    Grass = 1 << 4,  
+    Electric = 1 << 5, 
+    Ice = 1 << 6, 
+    Fighting = 1 << 7,  
+    Poison = 1 << 8, 
+    Ground = 1 << 9, 
+    Flying = 1 << 10, 
+    Psychic = 1 << 11,  
+    Bug = 1 << 12, 
+    Rock = 1 << 13, 
+    Ghost = 1 << 14, 
+    Dark = 1 << 15, 
+    Dragon = 1 << 16, 
+    Steel = 1 << 17, 
+    Fairy = 1 << 18
 }
 
 [Serializable]

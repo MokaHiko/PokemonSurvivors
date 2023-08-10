@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using static PokemonMove;
@@ -69,20 +70,21 @@ public class BattleRoomManager : MonoBehaviour
                     PokemonMove move = ScriptableObject.CreateInstance(nameof(PokemonMove)) as PokemonMove;
                     move.Name = pokemonData.Moves[i].Name;
 
-                    if(Enum.TryParse<PokemonType>(pokemonData.Moves[i].Type, out move.Type))
+                    if(!Enum.TryParse<PokemonType>(pokemonData.Moves[i].Type, true, out move.Type))
 					{ 
 						Debug.Log("Parse failure for type: " + pokemonData.Moves[i].Type);
 					}
 
-                    if(Enum.TryParse<PokemonDamageClass>(pokemonData.Moves[i].DamageClass, out move.DamageClass))
+                    if(!Enum.TryParse<PokemonDamageClass>(pokemonData.Moves[i].DamageClass, true, out move.DamageClass))
 					{ 
 						Debug.Log("Parse failure for damage class : " + pokemonData.Moves[i].DamageClass);
 					}
 
+                    move.AnimationName = move.Name;
+                    move.AnimationDuration = 0.5f;
+
                     move.Damage = pokemonData.Moves[i].Damage;
                     move.Accuracy = pokemonData.Moves[i].Accuracy;
-                    move.AnimationName = "ShadowBall";
-                    move.AnimationDuration = 0.5f;
 
                     newPokemon.Moves.Add(move);
                 }
@@ -209,32 +211,36 @@ public class BattleRoomManager : MonoBehaviour
 		// Recursively solve turn	
 		List<BattleAction> actions = _solver.Solve();
 		while(actions.Count > 0)
-		{ 
-			// Perform solved trun
-			foreach(BattleAction action in actions)
-			{
-				// Reset actions flags ahead
-				Trainer_1_ActedFlag = false;
-				Trainer_2_ActedFlag = false;
+		{
+            foreach(BattleAction action in actions) 
+            {
+                // Reset actions flags ahead
+                Trainer_1_ActedFlag = false;
+                Trainer_2_ActedFlag = false;
 
-				// Check if invalidated 
-				if(action.Invalidated)
-				{
-					continue;
-				}
+                // Check if invalidated 
+                if(action.Invalidated)
+                {
+                    continue;
+                }
 
-				// Push to Log queue
-				eventMenu.PushBattleAction(action);
+                // Push to Log queue
+                eventMenu.PushBattleAction(action);
 
-				yield return action.Act(actions);
-				yield return StartCoroutine(eventMenu.FlushAndPresentBattleActionQueue());
-			}
+                yield return action.Act(actions);
+                yield return StartCoroutine(eventMenu.FlushAndPresentBattleActionQueue());
+            }
 
-			actions = _solver.Solve();
+            actions = _solver.Solve();
 		}
 
 		OnTurnExecuted();
     }
+
+	private List<BattleAction> Solve(TurnSolver solver)
+	{
+		return solver.Solve();
+	}
 
 	private void OnTurnExecuted()
 	{

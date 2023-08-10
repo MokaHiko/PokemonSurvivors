@@ -51,7 +51,13 @@ public class EventMenu : Menu
         while(_queue.Count > 0)
         { 
             BattleAction battleEvent = _queue.Dequeue();
+
             yield return StartCoroutine(DisplayBattleAction(battleEvent, TextPeriod));
+
+            foreach (var detail in battleEvent.Details)
+            {
+                yield return StartCoroutine(DisplayDetail(detail, TextPeriod));
+            }
     	}
 
         EventText.text = "...";
@@ -65,6 +71,17 @@ public class EventMenu : Menu
     private IEnumerator DisplayBattleAction(BattleAction evt, float duration)
     {
         EventText.text = evt.ToString();
+
+        float elapsedTime = 0;
+        while(elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+    	}
+    }
+    private IEnumerator DisplayDetail(string detail, float duration)
+    {
+        EventText.text = detail;
 
         float elapsedTime = 0;
         while(elapsedTime < duration)

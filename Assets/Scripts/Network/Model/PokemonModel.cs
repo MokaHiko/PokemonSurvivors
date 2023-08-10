@@ -20,6 +20,9 @@ public class PokemonNetworkModel
     public string FrontSpriteUrl;
     public string BackSpriteUrl;
 
+    public string FrontSpriteGifUrl;
+    public string BackSpriteGifUrl;
+
     public int Hp;
     public int Attack;
     public int Defense;

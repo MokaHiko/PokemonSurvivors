@@ -45,26 +45,32 @@ public class Trainer : MonoBehaviour
 
     public IEnumerator Attack(Trainer target, PokemonMove move)
     {
-		yield return StartCoroutine(ScriptableAnimations.Instance.Animations[move.AnimationName](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
+        if (ScriptableAnimations.Instance.Animations.ContainsKey(move.AnimationName))
+        {
+		    yield return StartCoroutine(ScriptableAnimations.Instance.Animations[move.AnimationName](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
+        }
+        else
+        {
+            if (move.DamageClass == PokemonDamageClass.Physical)
+            {
+		        yield return StartCoroutine(ScriptableAnimations.Instance.Animations["MoveTowards"](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
+            }
+            else if (move.DamageClass == PokemonDamageClass.Special)
+            {
+		        yield return StartCoroutine(ScriptableAnimations.Instance.Animations["ShadowBall"](PokemonSprite, target.PokemonSprite, move.AnimationDuration));
+            }
+            else
+            {
+		        yield return StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 0.50f));
+            }
+        }
     }
 
-    public IEnumerator TakeDamage(Pokemon attacker, PokemonMove move)
+    public IEnumerator TakeDamage(Pokemon attacker, float damage)
     {
 		yield return StartCoroutine(ScriptableAnimations.Instance.Animations["SquashAndSqueeze"](PokemonSprite, PokemonSprite, 0.50f));
 
-        Pokemon defender = CurrentPokemon;
-
-        float ePower = move.Damage;
-        float eAttackStat = move.DamageClass == PokemonDamageClass.Special ? attacker.SpecialAttack : attacker.Attack;
-        float eDefenseStat = move.DamageClass == PokemonDamageClass.Special ? defender.SpecialDefense : defender.Defense;
-
-        float damage = (((((2 * attacker.Level) / 5.0f) + 2) * ePower * (eAttackStat/eDefenseStat)) / 50) + 2;
-
-        float critMultiplier = Random.Range(0.0f, 1.0f) <= (1.0f/24.0f) ? 1.5f : 1.0f;
-        damage *= critMultiplier;
-
-        float random = (float)((int)Random.Range(86, 100) / 100.0f);
-        damage *= random;
+        // TODO: Health bar animation
 
         CurrentPokemon.CurrentHp -= damage;
 
