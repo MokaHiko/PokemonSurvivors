@@ -55,6 +55,7 @@ public class Pokemon
 {
     public string Name;
     public int Level = 100;
+    public string AnimatedPokemonSpriteUrl;
     public Sprite Sprite;
 
     public IVS Ivs = new IVS();

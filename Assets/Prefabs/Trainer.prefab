@@ -50,6 +50,7 @@ MonoBehaviour:
   Pokemons:
   - Name: 
     Level: 100
+    AnimatedPokemonSpriteUrl: 
     Sprite: {fileID: 0}
     Ivs:
       Hp: 0
@@ -71,6 +72,7 @@ MonoBehaviour:
     Moves: []
   - Name: 
     Level: 100
+    AnimatedPokemonSpriteUrl: 
     Sprite: {fileID: 0}
     Ivs:
       Hp: 0
@@ -92,6 +94,7 @@ MonoBehaviour:
     Moves: []
   - Name: 
     Level: 100
+    AnimatedPokemonSpriteUrl: 
     Sprite: {fileID: 0}
     Ivs:
       Hp: 0
@@ -115,6 +118,7 @@ MonoBehaviour:
   CurrentPokemon:
     Name: 
     Level: 100
+    AnimatedPokemonSpriteUrl: 
     Sprite: {fileID: 0}
     Ivs:
       Hp: 0
@@ -135,6 +139,7 @@ MonoBehaviour:
     IsDead: 0
     Moves: []
   CurrentPokemonIndex: 0
+  _animatedPokemonSpriteController: {fileID: 863546708097310932}
 --- !u!114 &1576478867039450887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,7 +163,7 @@ GameObject:
   - component: {fileID: 1576478867089148089}
   - component: {fileID: 1576478867089148086}
   - component: {fileID: 1576478867089148088}
-  - component: {fileID: 583599538969858497}
+  - component: {fileID: 863546708097310932}
   m_Layer: 0
   m_Name: PokemonSprite
   m_TagString: Untagged
@@ -243,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac5849dfe52bd943904852455ecd4cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &583599538969858497
+--- !u!114 &863546708097310932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,17 +257,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1576478867089148087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71a962ef61c26864486fed7b06ca2919, type: 3}
+  m_Script: {fileID: 11500000, guid: cfeead3a71666e945899d24832b89ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_rawImage: {fileID: 0}
-  m_imgAspectCtrl: {fileID: 0}
-  m_filterMode: 0
-  m_wrapMode: 1
-  m_loadOnStart: 0
-  m_loadOnStartUrl: 
-  m_rotateOnLoading: 0
-  m_outputDebugLog: 0
+  _spriteList: []
+  _frameRate: 12
 --- !u!1 &1576478867205316550
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,6 +21,9 @@ public class Trainer : MonoBehaviour
     [SerializeField]
     public int CurrentPokemonIndex;
 
+    [SerializeField]
+    private AnimatedPokemonSpriteController _animatedPokemonSpriteController;
+
     public IEnumerator Init()
     {
         if(Pokemons.Count > 0)
@@ -109,6 +112,12 @@ public class Trainer : MonoBehaviour
         // Change data and sprite
         CurrentPokemon = Pokemons[index];
         CurrentPokemonIndex = index;
-        PokemonSprite.sprite = CurrentPokemon.Sprite;
+
+        //PokemonSprite.sprite = CurrentPokemon.Sprite;
+        Debug.Log("loading: " + CurrentPokemon.AnimatedPokemonSpriteUrl);
+        yield return StartCoroutine(_animatedPokemonSpriteController.LoadGifFromUrlCoroutine(CurrentPokemon.AnimatedPokemonSpriteUrl));
+
+        Debug.Log("playing: " + CurrentPokemon.AnimatedPokemonSpriteUrl);
+        _animatedPokemonSpriteController.Play(PokemonSprite);
     }
 }

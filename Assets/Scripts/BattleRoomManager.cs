@@ -91,10 +91,12 @@ public class BattleRoomManager : MonoBehaviour
 
 				if(trainer == Trainer_1)
 				{ 
+					newPokemon.AnimatedPokemonSpriteUrl = pokemonData.BackSpriteGifUrl;
 					spriteUrls.Add(pokemonData.BackSpriteUrl);
 				}
 				else
 				{ 
+					newPokemon.AnimatedPokemonSpriteUrl = pokemonData.FrontSpriteGifUrl;
 					spriteUrls.Add(pokemonData.FrontSpriteUrl);
 				}
             }));
