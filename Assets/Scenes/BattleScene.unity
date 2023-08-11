@@ -822,6 +822,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spriteList: []
   _frameRate: 12
+  _spriteFrame: 0
+  _state: 0
 --- !u!1001 &1235771190
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -840,14 +842,6 @@ PrefabInstance:
     - target: {fileID: 7847198143696438547, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7847198143752655390, guid: 579878ed860254325a0e610d2f8272af, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1.8054962
-      objectReference: {fileID: 0}
-    - target: {fileID: 7847198144187947221, guid: 579878ed860254325a0e610d2f8272af, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.52020264
       objectReference: {fileID: 0}
     - target: {fileID: 7847198144909329896, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_Pivot.x
@@ -936,10 +930,6 @@ PrefabInstance:
     - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_Name
       value: EnemyPokemonStatus
-      objectReference: {fileID: 0}
-    - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 579878ed860254325a0e610d2f8272af, type: 3}
@@ -1783,10 +1773,6 @@ PrefabInstance:
     - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
       propertyPath: m_Name
       value: PlayerPokemonStatus
-      objectReference: {fileID: 0}
-    - target: {fileID: 7847198144909329903, guid: 579878ed860254325a0e610d2f8272af, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 579878ed860254325a0e610d2f8272af, type: 3}

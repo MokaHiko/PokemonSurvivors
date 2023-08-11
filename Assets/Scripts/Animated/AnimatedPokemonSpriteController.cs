@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class AnimatedPokemonSpriteController : MonoBehaviour
 {
@@ -100,22 +101,20 @@ public class AnimatedPokemonSpriteController : MonoBehaviour
             path = Path.Combine("file:///" + Application.streamingAssetsPath, url);
         }
 
-        // Load file
         _state = AnimatedSpriteState.Loading;
-        using (WWW www = new WWW(path))
+        using UnityWebRequest request = UnityWebRequest.Get(path);
+        yield return request.SendWebRequest();
+        if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            yield return www;
-
-            if (string.IsNullOrEmpty(www.error) == false)
-            {
-                Debug.LogError("File load error.\n" + www.error);
-                yield break;
-            }
-
+            Debug.Log(request.error + " [Endpoint]: " + path);
+        }
+        else
+        {
+            Stop();
             Clear();
 
             // Get GIF textures
-            yield return StartCoroutine(UniGif.GetTextureListCoroutine(www.bytes, (gifTexList, loopCount, width, height) =>
+            yield return StartCoroutine(UniGif.GetTextureListCoroutine(request.downloadHandler.data, (gifTexList, loopCount, width, height) =>
             {
                 if (gifTexList != null)
                 {
@@ -138,7 +137,7 @@ public class AnimatedPokemonSpriteController : MonoBehaviour
             },
             _filterMode, _wrapMode, _outputDebugLog));
         }
-    }
+     }
     private Sprite CreateSpriteFromTexture(Texture2D texture, int width, int height)
     {
         Rect rect = new Rect(0, 0, width, height);
